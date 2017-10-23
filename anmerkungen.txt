@@ -1,0 +1,7 @@
++ Bei Installationsanleitung der HTW werden die Pakete 
+    gcc-arm-eabi und 
+    gdb-arm-eabi 
+    genannt. Diese existieren aber nicht. Die echte Pakete heißen 
+    gcc-arm-none-eabi und 
+    gdb-arm-none-eabi.
++
