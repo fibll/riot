@@ -1,7 +1,17 @@
-+ Bei Installationsanleitung der HTW werden die Pakete 
-    gcc-arm-eabi und 
-    gdb-arm-eabi 
-    genannt. Diese existieren aber nicht. Die echte Pakete heißen 
-    gcc-arm-none-eabi und 
-    gdb-arm-none-eabi.
-+
++ Zur Installationsanleitung:
+
+  - https://www2.htw-dresden.de/~wiki_sn/index.php/Schwerpunkte_der_Untersuchungen_zu_RIOT_OS
+
+  - Auf der Seite 'Anleitung zur Installation benötigter Software' sind die Pakete
+
+    gcc-arm-eabi und
+    gdb-arm-eabi
+
+    genannt. Diese existieren aber nicht. Wahrscheinlich sind die Pakete
+
+    gcc-arm-none-eabi und
+    gdb-arm-none-eabi
+
+    gemeint.
+
++ Im Unterpunkt 'Inbetriebnahme' sollte keine totale Adressen stehen, dem Board wird eine individuelle ip6 Adresse vergeben welche angepingt werden kann.
