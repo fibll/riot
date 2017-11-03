@@ -1,0 +1,21 @@
+Projekt aufspielen:
++ export BOARD=samr21-xpro && make term // für atmel platinen terminal
++ make // um projekt binaries zu erstellen
++ export BOARD=samr21-xpro && make flash // um atmel platine mit binaries zu flashen
+
+
+
+ipv6 Adressen:
++ 2001:db8::585b:3c24:7705:9eba (...C26B)
++ 2001:db8::585f:1f1d:d017:47da (...C3DB)
+
+Funktioniert:
++ gnbc_border_router auf ...C26B
++ gnbc_networking auf ...C3DB
++ microcoap auf ...C3DB
+    -> addr für copper (Firefox):
+    coap://[2001:db8::585f:1f1d:d017:47da]:5683/riot/board
+
+"-nicht
++ gnbc_border_router auf ...C26B
++ gnbc_minimal auf ...C3DB
