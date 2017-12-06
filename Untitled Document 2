@@ -1,0 +1,29 @@
+IDS for samr21 Module
+
+[000425191801C3DB]
+2001:db8::585f:1f1d:d017:47da
+fe80        ::585f:1f1d:d017:47da
+
+6a:4a:10:d9:ea:86 HW addr
+inet6 addr: ff02::1/128  scope: local [multicast]
+inet6 addr: fe80::684a:10ff:fed9:ea86/64  scope: local
+inet6 addr: ff02::1:ffd9:ea86/128  scope: local [multicast]
+
+f2:57:1b:61:81:a5 HW addr
+net6 addr: ff02::1/128  scope: local [multicast]
+inet6 addr: fe80::f057:1bff:fe61:81a5/64  scope: local
+inet6 addr: ff02::1:ff61:81a5/128  scope: local [multicast]
+
+66:14:11:7e:54:bd HW addr
+inet6 addr: ff02::1/128  scope: local [multicast]
+inet6 addr: fe80::6414:11ff:fe7e:54bd/64  scope: local
+inet6 addr: ff02::1:ff7e:54bd/128  scope: local [multicast]
+
+
+# coap-client -m get coap://[2001:db8:1:0:6414:11ff:fe7e:54bd]/riot/board :: layer addr
+coap://[2001:db8:1:0:6414:11ff:fe7e:54bd]/riot/board
+            
+
+[EEE425191801C26B]
+fe80        ::7b78:1f07:5426:bd9a
+2001:db8::7b78:1f07:5426:bd9a
