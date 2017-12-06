@@ -31,21 +31,22 @@ This addon is for [RIoT-OS][1] _**TODO MODULE NAME**_
 
 [1]: https://riot-os.org/ "RIoT Homepage"
 
-###
-temp ideas
+### temp ideas
+
 ```c
 #include "/home/tobi/RIOT/drivers/include/periph/gpio.h"
-gpio_t PApin = GPIO_PIN(PB,2); // GPIO_PIN(Port abkürzung, Pin)
+gpio_t PApin = GPIO_PIN(PB,2); // GPIO_PIN(Port Abkürzung, Pin)
 gpio_init(PApin, GPIO_OUT);
 gpio_set(PApin); // high
 gpio_clear(PApin); // low
 ```
-die funktion shell_run blockiert aktiv  
-1x in shell_run   
-1x in read_line  
 
-https://github.com/RIOT-OS/RIOT/wiki/Board:-Samr21-xpro  
-http://riot-os.org/api/group__drivers__periph__gpio.html  
+die Funktion shell_run blockiert aktiv
+1x in shell_run
+1x in read_line
 
-neue Kommandos müssen in sys/shell/commands integriert werden   
-https://github.com/RIOT-OS/RIOT/wiki/Creating-your-first-RIOT-project
+<https://github.com/RIOT-OS/RIOT/wiki/Board:-Samr21-xpro>
+<http://riot-os.org/api/group__drivers__periph__gpio.html>
+
+neue Kommandos müssen in sys/shell/commands integriert werden
+<https://github.com/RIOT-OS/RIOT/wiki/Creating-your-first-RIOT-project>
