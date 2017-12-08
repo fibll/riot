@@ -32,7 +32,7 @@ This addon is for [RIoT-OS][1] _**TODO MODULE NAME**_
 ### 3.1 Introduction
 
 The locker module receive the encrypted key and send it to the server (connected computer). The server interpret the command and send the lock/unlock or the not valid command to the locker module.
-To implement new commands we use the description of the RIoT Tutorial [Creating your first RIoT project][2]. There are many possibilities how to handle new commands [(rev 3.2)] (#3.2-possible-implementations). We will use version 3, it is simple to implement and easy to understand by the user.
+To implement new commands we use the description of the RIoT Tutorial [Creating your first RIoT project][2]. There are many possibilities how to handle new commands [(rev 3.2)](#32-possible-implementations). We will use version 3, it is simple to implement and easy to understand by the user.
 
 
 ### 3.2 Possible implementations
@@ -98,13 +98,3 @@ gpio_clear(PApin); // low
 
 [1]: https://riot-os.org/ "RIoT Homepage"
 [2]: https://github.com/RIOT-OS/RIOT/wiki/Creating-your-first-RIOT-project "RIoT Tutorial for implementation of new shell commands"
-
-## Title
-
-### Place 1
-
-Hello, this is some text to fill in this, [here](#place-2), is a link to the second place.
-
-### 3.5 Place 2
-
-Place one has the fun times of linking here, but I can also link back [here](#place-1).
