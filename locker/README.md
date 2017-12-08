@@ -32,7 +32,7 @@ This addon is for [RIoT-OS][1] _**TODO MODULE NAME**_
 ### 3.1 Introduction
 
 The locker module receive the encrypted key and send it to the server (connected computer). The server interpret the command and send the lock/unlock or the not valid command to the locker module.
-To implement new commands we use the description of the RIoT Tutorial [Creating your first RIoT project][2]. There are many possibilities how to handle new commands [(rev 3.2)] (#3.2 Possible implementations). We will use version 3, it is simple to implement and easy to understand by the user.
+To implement new commands we use the description of the RIoT Tutorial [Creating your first RIoT project][2]. There are many possibilities how to handle new commands [(rev 3.2)] (#-3.2-Possible-implementations). We will use version 3, it is simple to implement and easy to understand by the user.
 
 
 ### 3.2 Possible implementations
