@@ -13,8 +13,10 @@
  * @file        main interface of locker addon
  * @brief       Example to set gpio Pins
  *
- * @author      Simon <sxxx@informatik.htw-dresden.de>
+ * @author      Simon Retsch   <sxxxxx@informatik.htw-dresden.de>
  * @author      Tobias Ehrlich <s72851@informatik.htw-dresden.de>
+ * 
+ * last update: 12/10/2017
  *
  * @}
  */

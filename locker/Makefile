@@ -49,6 +49,18 @@ INCLUDES += -I$(CURDIR)/includes -I$(RIOTBASE)/drivers/include/periph
 # Include SLIP package for IP over Serial communication
 #USEMODULE += slipdev
 
+# bindist specific stuff:
+#
+# use BIN_DIRS instead of DIRS, BIN_USEMODULE instead of USEMODULE,
+# to flag that the directory should only be included when doing a normal build,
+# and that the resulting .a should be saved when doing "make locker"
+BIN_DIRS += src
+BIN_USEMODULE += src        # include "src" module
+BIN_USEMODULE += locker    # include application module (named $APPLICATION)
+
+# list of extra files to include in binary distribution
+DIST_FILES += Makefile
+
 # Include packages that pull up and auto-init the link layer.
 # NOTE: 6LoWPAN will be included if IEEE802.15.4 devices are present
 USEMODULE += gnrc_netdev_default
@@ -86,8 +98,6 @@ TERMFLAGS ?= $(PORT) $(TAP) $(IPV6_PREFIX)
 TERMDEPS += host-tools
 
 include $(RIOTBASE)/Makefile.include
-
-include $(RIOTBASE)/drivers/include/periph/gpio.h
 
 .PHONY: host-tools
 

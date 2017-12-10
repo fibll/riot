@@ -13,8 +13,10 @@
  * @file        
  * @brief       Example to set gpio Pins
  *
- * @author      Simon <sxxx@informatik.htw-dresden.de>
+ * @author      Simon Retsch   <sxxxxx@informatik.htw-dresden.de>
  * @author      Tobias Ehrlich <s72851@informatik.htw-dresden.de>
+ * 
+ * last update: 12/10/2017
  *
  * @}
  */
@@ -24,7 +26,7 @@
 
 #include "shell.h"
 
-shell_command_t *getShellCommandTable(void);
+shell_command_t *getShellCommandTable(void); // returned pointer to module shell command table
 
 #endif
 // EOF
