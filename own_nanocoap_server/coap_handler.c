@@ -25,20 +25,17 @@ static ssize_t _riot_board_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 // own handler
 static ssize_t _riot_foo_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 {
-    printf("\nOWN HANDLER ---\n\n");
+    printf("\nOWN HANDLER\n");
     
+    if(coap_has_observe(pkt))
+        printf("coap has observe option\n\n");
+    else
+        printf("No observe option\n\n");
     
-    coap_pkt_t* tmp = NULL;
-    int ret = coap_has_observe(tmp);
-
-    printf("ret: %i\n", ret);
-
     // print coap option array
-    printf("observe value: %ld\n", pkt->observe_value);
     printf("payload length: %i\n", pkt->payload_len);
 
-    printf("send coap message\n");
-
+    printf("return\n");
     return coap_reply_simple(pkt, COAP_CODE_205, buf, len,
             COAP_FORMAT_TEXT, (uint8_t*)"foobar", strlen("foobar"));
 }

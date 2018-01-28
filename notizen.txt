@@ -56,9 +56,14 @@ should be replaced with:
    BOARD ?= samr21-xpro
 
 =================================================================
-Using coap-client cmd tool with payload option -e
-coap-client -e somePayload -m get "coap://[2001:db8::585f:1f1d:d017:47da]:5683/foo"
+coap-client
 
+Options:
+payload option -e
+coap-client -e somePayload -m get "coap://[ipv6-adress]:5683/foo"
+
+observe option -s (subscribe) <time_you_want_to_subscribe_in_sec>
+coap-client -s 1000 -m get "coap://[ipv6-adress]:5683/foo"
 
 
 =================================================================
