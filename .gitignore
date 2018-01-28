@@ -1,3 +1,5 @@
 hello-world
-own_microcoap_server/bin/
-own_nanocoap_server/bin/
+own_microcoap_server
+own_nanocoap_server
+foo
+*.txt

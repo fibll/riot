@@ -5,13 +5,29 @@ Projekt aufspielen:
 
 
 
+=================================================================
 ipv6 Adressen:
-+ 2001:db8::585b:3c24:7705:9eba (...C26B)
-+ 2001:db8::585f:1f1d:d017:47da (...C3DB)
+ATML2127031800009659:
++ 2001:db8::585b:3c24:7705:9eba (...C26B) ORANGE
 
+ATML2127031800009291:
++ 2001:db8::585f:1f1d:d017:47da (...C3DB) YELLOW
+
+
+Bei aktuellem RIOT (2018.01-branch)
+Yellow:
+2001:db8::7b78:1f07:5426:bd9a
+
+Orange:
+2001:db8::7b7c:3c3e:f334:64fa
+
+
+
+
+=================================================================
 Funktioniert:
-+ gnbc_border_router auf ...C26B
-+ gnbc_networking auf ...C3DB
++ gnbc_border_router auf ...C26B (ORANGE)
++ gnbc_networking auf ...C3DB (YELLOW)
 + microcoap auf ...C3DB
     -> addr für copper (Firefox):
     coap://[2001:db8::585f:1f1d:d017:47da]:5683/riot/board
@@ -19,3 +35,33 @@ Funktioniert:
 "-nicht
 + gnbc_border_router auf ...C26B
 + gnbc_minimal auf ...C3DB
+
+
+=================================================================
+Mögliche Realisierungen:
++ Kein Server
+-> 1 coap-server, 1 coap-clients
+-> Keyboard hängt an Server, Client überprüft Passwort in DB und öffnet Schloss
+
++ Mit Server
+-> 1 coap-server, 1 gnrc-border-router mit schloss, 1 server mit DB anbindung
+-> Keyboard an coap-server, gnrc-border-router leitet alle Kommunikation an server weiter, dieser kontrolliert coap anfrage mit passwort und schickt gnrc-border-router dann ob schloss öffnet oder nicht
+
+
+
+=================================================================
+In makefiles the line
+   BOARD ?= native
+should be replaced with:
+   BOARD ?= samr21-xpro
+
+=================================================================
+Using coap-client cmd tool with payload option -e
+coap-client -e somePayload -m get "coap://[2001:db8::585f:1f1d:d017:47da]:5683/foo"
+
+
+
+=================================================================
+Links:
+https://tools.ietf.org/pdf/rfc7641.pdf
+

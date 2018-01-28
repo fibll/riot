@@ -15,3 +15,8 @@
     gemeint.
 
 + Im Unterpunkt 'Inbetriebnahme' sollte keine totale Adressen stehen, dem Board wird eine individuelle ip6 Adresse vergeben welche angepingt werden kann.
+
+
+
+Fragen:
++ Wie wird eine Nachricht des Coap Servers an den Observer getriggered? Interrupt? Eingerichtete Variable die auf Änderung überwacht wird?
