@@ -20,14 +20,31 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
+//#include "vectors_kinetis.h"
+
+void Isr_sw0(void);
 
 int main(void)
 {
+    //int pressed = 0;
+
     printf("\n\n\n\n");
     puts("Hello out there!");
 
     printf("Board: %s\n", RIOT_BOARD);
     printf("Featured MCU: %s\n", RIOT_MCU);
 
+    while(1)
+    {
+        ;
+    }
+
+    // should never be reached
     return 0;
+}
+
+void Isr_sw0(void)
+{
+    printf("SW0 pressed\n");
 }
