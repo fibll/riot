@@ -6,7 +6,7 @@ APPLICATION = nanocoap_server
 BOARD ?= samr21-xpro
 
 # This has to be the absolute path to the RIOT base directory:
-RIOTBASE ?= $(CURDIR)/../..
+RIOTBASE ?= /home/bar/projekte/htw/RIOT/
 
 BOARD_INSUFFICIENT_MEMORY := chronos msb-430 msb-430h nucleo32-f031 nucleo32-f042 \
                              nucleo32-l031 nucleo-f030 nucleo-l053 stm32f0discovery \

@@ -23,8 +23,8 @@
 
 #include "nanocoap.h"
 #include "nanocoap_sock.h"
-#include "net/gcoap.h"
-#include "/home/bar/projekte/htw/RIOT/sys/net/application_layer/gcoap/gcoap.c"
+//#include "net/gcoap.h"
+//#include "/home/bar/projekte/htw/RIOT/sys/net/application_layer/gcoap/gcoap.c"
 
 #include "xtimer.h"
 
@@ -41,16 +41,30 @@ int main(void)
 
     puts("RIOT nanocoap example application");
 
-    printf("===================================");
+    /*
+    printf("===================================\n");
     puts("\n---\nOWN NANOSERVER\n---\n");
 
     // test if gcoap functions can be used
     kernel_pid_t value = gcoap_init();
-    printf("KERNEL_PID: %i\n", value);
+    printf("KERNEL_PID: %i\n\n", value);
+    
+    // tmp vars
+    coap_pkt_t* arg1 = NULL;
+    uint8_t* arg2 = NULL;
+    size_t arg3 = 5;
+    const coap_resource_t* arg4 = NULL;
 
+    printf("Codes: ");
+    printf("OK: %i\n", GCOAP_OBS_INIT_OK);
+    printf("ERR: %i\n", GCOAP_OBS_INIT_ERR);
+    printf("UNUSED: %i\n\n", GCOAP_OBS_INIT_UNUSED);
+    
+    printf("GCOAP_RESP_INIT: %i\n\n", gcoap_obs_init(arg1, arg2, arg3, arg4));
+    
 
-    printf("===================================");
-
+    printf("===================================\n");
+    */
 
     /* nanocoap_server uses gnrc sock which uses gnrc which needs a msg queue */
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
