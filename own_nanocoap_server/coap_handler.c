@@ -13,6 +13,10 @@
 #include "fmt.h"
 #include "nanocoap.h"
 
+#include "net/gcoap.h"
+#include "/home/bar/projekte/htw/RIOT/sys/net/application_layer/gcoap/gcoap.c"
+
+
 /* internal value that can be read/written via CoAP */
 static uint8_t internal_value = 0;
 
@@ -26,7 +30,9 @@ static ssize_t _riot_board_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 static ssize_t _riot_foo_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 {
     printf("\nOWN HANDLER\n");
-    
+    int ret = 0;
+
+    // detect observe option
     if(coap_has_observe(pkt))
         printf("coap has observe option\n\n");
     else
@@ -34,10 +40,41 @@ static ssize_t _riot_foo_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
     
     // print coap option array
     printf("payload length: %i\n", pkt->payload_len);
+    printf("payload: %s\n", pkt->payload);
 
+    // handling resources and observe ===
+    // create a resource
+    coap_resource_t* resource = NULL;
+    resource->path = "coap://localhost:5683/riot/foo";
+    resource->handler = NULL;
+
+    // detect observe option with gcoap bib
+    // step 1: check if resource is already been observed
+    ret = gcoap_obs_init(pkt, buf, 5 /*random*/, resource);
+    if(ret == GCOAP_OBS_INIT_ERR)
+        printf("ERR: gcoap observe init did not work");
+    printf("observe init response: %i\n", ret);
+
+    // step 2: create own payload and set it as payload in the package pointer
+    uint8_t* tmpPayload = (uint8_t*)"asdf";
+    pkt->payload = tmpPayload;
+    printf("new payload: %s\n", pkt->payload);
+
+    // step 3: update the packet for the payload
+    ret = gcoap_finish(pkt, 4 /*cause tmpPayloads size is 3, don't know how strlen works*/, COAP_FORMAT_NONE);
+    if(ret < 0)
+        printf("ERR: gcoap_finish did not work!\n");
+
+    // step 4 (final): send observe message
+    // FIX: does not work so far
+    ret = gcoap_obs_send(buf, len, resource);
+    if(ret == 0)
+        printf("ERR: cannot send!\n");
+
+    // the normal simple reply at the end
     printf("return\n");
     return coap_reply_simple(pkt, COAP_CODE_205, buf, len,
-            COAP_FORMAT_TEXT, (uint8_t*)"foobar", strlen("foobar"));
+            COAP_FORMAT_TEXT, (uint8_t*)"simple reply", strlen("simple reply"));
 }
 
 static ssize_t _riot_value_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
