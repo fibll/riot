@@ -72,6 +72,25 @@ coap-client -s 1000 -m get "coap://[ipv6-adress]:5683/foo"
 
 
 =================================================================
+Observe
+Für die realisierung müssen 4 Schritte ausgeführt werden. Nachzulesen auf:
+https://riot-os.org/api/group__net__gcoap.html#ga3918d03f99a7312946bc28d5fdb7b610
+
+Bei denen für ein observe benötigten resourcen handelt es sich um die schon am Ende von coap_handler.client
+definierten resourcen. In den Handlern welche dort angegeben werden, müssen nun die 4 Schritte 
+ausgeführt werden.
+
+Im ersten Schritt wird geprüft ob diese Resource überhaupt einen observer hat.
+Hier ist noch nicht klar warum bei dem Aufruf der resource per coap-client mit option -s kein
+observer eingetragen wird.
+Führt man den Aufruf mit der coap Beispiel Seite (coap://californium.eclipse.org:5683/obs) aus, funktioniert die -s option.
+$ coap-client -s 20 -m get "coap://californium.eclipse.org:5683/obs"
+
+
+
+
+
+=================================================================
 Links
 
 https://riot-os.org/api/group__net__gcoap.html#ga3918d03f99a7312946bc28d5fdb7b610
