@@ -19,11 +19,30 @@
 
 #include <stdio.h>
 
-#include "/home/bar/projekte/htw/RIOT/sys/include/net/gcoap.h"
+//#include "/home/bar/projekte/htw/RIOT/sys/include/net/gcoap.h"
 
 #include "nanocoap.h"
 #include "nanocoap_sock.h"
 
+#include "xtimer.h"
+
+
+// from monica
+// standard
+ #include <inttypes.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+// riot
+#include "board.h"
+#include "log.h"
+#include "msg.h"
+#include "net/af.h"
+#include "net/gnrc/ipv6.h"
+#include "net/gnrc/netapi.h"
+#include "net/gnrc/netif.h"
+#include "periph/gpio.h"
+#include "shell.h"
 #include "xtimer.h"
 
 #define COAP_INBUF_SIZE (256U)
@@ -34,26 +53,56 @@ static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
 /* import "ifconfig" shell command, used for printing addresses */
 extern int _netif_config(int argc, char **argv);
 
+// from monica
+extern int coap_init(void);
+
+
+
+
+
+
+
+
+// own stuff
+// prototypes
+//static ssize_t _riot_bar_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
+
+
+
+/* internal value that can be read/written via CoAP */
+//static uint8_t internal_value = 0;
+
+
+// put to the top
+/* must be sorted by path (alphabetically) */
+/*
+coap_resource_t gcoap_resources = 
+    { "/riot/bar", COAP_GET, _riot_bar_handler };
+*/
+// own stuff end
+
+
 int main(void)
 {
 
     puts("RIOT nanocoap example application");
 
-    /*
+    
     printf("===================================\n");
     puts("\n---\nOWN NANOSERVER\n---\n");
 
-    // test if gcoap functions can be used
-    kernel_pid_t value = gcoap_init();
-    printf("KERNEL_PID: %i\n\n", value);
 
-    printf("Codes: ");
-    printf("OK: %i\n", GCOAP_OBS_INIT_OK);
-    printf("ERR: %i\n", GCOAP_OBS_INIT_ERR);
-    printf("UNUSED: %i\n\n", GCOAP_OBS_INIT_UNUSED);    
+    // from monica 
+    // start coap thread
+    LOG_INFO(".. init coap\n");
+    if(coap_init() < 0) {
+        return 1;
+    }
+    // end
 
-    printf("===================================\n");
-    */
+
+
+    // usual stuff
 
     /* nanocoap_server uses gnrc sock which uses gnrc which needs a msg queue */
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);

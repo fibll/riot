@@ -20,6 +20,11 @@ USEMODULE += auto_init_gnrc_netif
 USEMODULE += gnrc_ipv6_default
 USEMODULE += gnrc_udp
 USEMODULE += gnrc_sock_udp
+
+# from monica
+USEMODULE += gcoap
+# end
+
 # Additional networking modules that can be dropped if not needed
 USEMODULE += gnrc_icmpv6_echo
 
