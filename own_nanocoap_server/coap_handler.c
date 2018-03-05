@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "log.h"
 #include "fmt.h"
 #include "nanocoap.h"
 
@@ -23,7 +24,9 @@ static ssize_t _riot_resource_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 static ssize_t _riot_value_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
 
 // from monica
-static ssize_t _riot_info_handler(coap_pkt_t* pdu, uint8_t *buf, size_t len);
+static ssize_t _riot_gcoap_info_handler(coap_pkt_t* pkt, uint8_t *buf, size_t len);
+static ssize_t _riot_gcoap_init_handler(coap_pkt_t* pkt, uint8_t *buf, size_t len);
+static ssize_t _riot_gcoap_obs_handler(coap_pkt_t* pkt, uint8_t *buf, size_t len);
 int coap_init(void);
 // end
 
@@ -39,11 +42,13 @@ static uint8_t internal_value = 0;
 /* must be sorted by path (alphabetically) */
 const coap_resource_t coap_resources[] = {
     COAP_WELL_KNOWN_CORE_DEFAULT_HANDLER,
-    { "/riot/board",    COAP_GET, _riot_board_handler },
-    { "/riot/info",     COAP_GET, _riot_info_handler },
-    { "/riot/foo",      COAP_GET, _riot_foo_handler },
-    { "/riot/resource", COAP_GET, _riot_resource_handler },    
-    { "/riot/value",    COAP_GET, _riot_value_handler },
+    { "/riot/board",        COAP_GET, _riot_board_handler },
+    { "/riot/gcoap/info",   COAP_GET, _riot_gcoap_info_handler },
+    { "/riot/gcoap/init",   COAP_GET, _riot_gcoap_init_handler },
+    { "/riot/gcoap/obs",    COAP_GET, _riot_gcoap_obs_handler },
+    { "/riot/foo",          COAP_GET, _riot_foo_handler },
+    { "/riot/resource",     COAP_GET, _riot_resource_handler },    
+    { "/riot/value",        COAP_GET, _riot_value_handler },
 };
 
 const unsigned coap_resources_numof = sizeof(coap_resources) / sizeof(coap_resources[0]);
@@ -61,47 +66,96 @@ static gcoap_listener_t _listener = {
 
 // functions
 
-static ssize_t _riot_info_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
+static ssize_t _riot_gcoap_info_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 {
     printf("\n--- Enter info handler --- \n");
 
     int ret = 0;
 
-    // LOG_DEBUG("[CoAP] info_handler\n");
-    printf("gcoap_resp_init: %i\n", gcoap_resp_init(pdu, buf, len, COAP_CODE_CONTENT));
+    // initalize gcoap response
+    ret = gcoap_resp_init(pkt, buf, len, COAP_CODE_CONTENT);
+    printf("[CoAP] Info: %i\n", ret);
 
+    // set answer
+    char infoStr[] = "--- GCOAP INFO HANDLER ---";
+    pkt->payload = (uint8_t *)infoStr;
+    size_t payload_len = strlen("--- GCOAP INFO HANDLER ---");
 
+    return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
+}
 
+static ssize_t _riot_gcoap_init_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
+{
+    printf("\n--- Enter init handler --- \n");
+
+    int ret = 0;
 
     // detect observe option with gcoap bib
     // step 1: check if resource is already been observed
     // ------
-
-    /*
     // init with given arguments, cause these are the values of the resource
-    ret = gcoap_obs_init(pkt, buf, len, &coap_resources[3]);
+    ret = gcoap_obs_init(pkt, buf, len, &coap_resources[4]);
+    printf("Resource [%s]:\n", coap_resources[4].path);
     if(ret == GCOAP_OBS_INIT_ERR)
         printf("ERR: gcoap observe init did not work\n");
-    else if(ret == GCOAP_OBS_INIT_UNUSED){
+    else if(ret == GCOAP_OBS_INIT_UNUSED)
         printf("No observer for this resource\n");
-        return coap_reply_simple(pkt, COAP_CODE_205, buf, len,
-            COAP_FORMAT_TEXT, (uint8_t*)"uncomplete reply", strlen("uncomplete reply"));
-        }
-    else
-        printf("observe init response: %i\n", ret);
-    */
+    else {
+        printf("Observe init response: %i\n", ret);
 
+        // step 2: create own payload and set it as payload in the package pointer
+        // ------
+        uint8_t* tmpPayload = (uint8_t*)"observe";
+        pkt->payload = tmpPayload;
+        printf("new payload: %s\n", pkt->payload);
 
+        // step 3: update the packet for the payload
+        // ------
+        ret = gcoap_finish(pkt, 4, COAP_FORMAT_NONE); // 4 cause tmpPayloads size is 3, don't know how strlen works
+        if(ret < 0)
+            printf("ERR: gcoap_finish did not work!\n");
 
+        // step 4 (final): send observe message
+        // ------
+        // FIX: does not work so far
+        ret = gcoap_obs_send(buf, len, &coap_resources[3]); //Adress of observe resource
+        if(ret == 0)
+            printf("ERR: cannot send!\n");
+    }
+    // end
+    
 
+    // initalize gcoap response
+    ret = gcoap_resp_init(pkt, buf, len, COAP_CODE_CONTENT);
+    printf("[CoAP] Init: %i\n", ret);
 
     // set answer
-    char infoStr[] = "--- INFO HANDLER ---";
+    char infoStr[] = "--- GCOAP INIT HANDLER ---";
     pkt->payload = (uint8_t *)infoStr;
-    size_t payload_len = strlen("--- INFO HANDLER ---");
+    size_t payload_len = strlen("--- GCOAP INIT HANDLER ---");
 
     return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
 }
+
+
+static ssize_t _riot_gcoap_obs_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
+{
+    printf("\n--- Enter obs handler --- \n");
+
+    int ret = 0;
+
+    // initalize gcoap response
+    ret = gcoap_resp_init(pkt, buf, len, COAP_CODE_CONTENT);
+    printf("[CoAP] init: %i\n", ret);
+
+    // set answer
+    char infoStr[] = "--- obs answer ---";
+    pkt->payload = (uint8_t *)infoStr;
+    size_t payload_len = strlen("--- obs answer ---");
+
+    return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
+}
+
 
 
 

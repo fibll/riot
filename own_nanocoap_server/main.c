@@ -57,31 +57,6 @@ extern int _netif_config(int argc, char **argv);
 extern int coap_init(void);
 
 
-
-
-
-
-
-
-// own stuff
-// prototypes
-//static ssize_t _riot_bar_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
-
-
-
-/* internal value that can be read/written via CoAP */
-//static uint8_t internal_value = 0;
-
-
-// put to the top
-/* must be sorted by path (alphabetically) */
-/*
-coap_resource_t gcoap_resources = 
-    { "/riot/bar", COAP_GET, _riot_bar_handler };
-*/
-// own stuff end
-
-
 int main(void)
 {
 
@@ -99,6 +74,52 @@ int main(void)
         return 1;
     }
     // end
+
+
+
+
+    // must be in main?
+
+    // coap obs stuff
+    /*
+    // detect observe option with gcoap bib
+    // step 1: check if resource is already been observed
+    // ------
+    // init with given arguments, cause these are the values of the resource
+    ret = gcoap_obs_init(pkt, buf, len, &coap_resources[3]);
+    if(ret == GCOAP_OBS_INIT_ERR)
+        LOG_DEBUG("ERR: gcoap observe init did not work\n");
+    else if(ret == GCOAP_OBS_INIT_UNUSED)
+        LOG_DEBUG("No observer for this resource\n");
+    else
+        LOG_DEBUG("Observe init response: %i\n", ret);
+
+    // step 2: create own payload and set it as payload in the package pointer
+    // ------
+    uint8_t* tmpPayload = (uint8_t*)"observe";
+    pkt->payload = tmpPayload;
+    LOG_DEBUG("new payload: %s\n", pkt->payload);
+
+    // step 3: update the packet for the payload
+    // ------
+    ret = gcoap_finish(pkt, 4, COAP_FORMAT_NONE); // 4 cause tmpPayloads size is 3, don't know how strlen works
+    if(ret < 0)
+        LOG_DEBUG("ERR: gcoap_finish did not work!\n");
+
+    // step 4 (final): send observe message
+    // ------
+    // FIX: does not work so far
+    ret = gcoap_obs_send(buf, len, &coap_resources[3]); //Adress of observe resource
+    if(ret == 0)
+        LOG_DEBUG("ERR: cannot send!\n");
+    // end
+    */
+
+
+
+
+
+
 
 
 
