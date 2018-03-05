@@ -88,6 +88,18 @@ $ coap-client -s 20 -m get "coap://californium.eclipse.org:5683/obs"
 
 
 
+## Erster Funktionierender Versuch ##
+### Setup ###
+- Funktion init: Führt 4 Observe Schritte aus, observed resource ist 'obs'
+- Funktion obs: Wird observed
+
+### Ablauf ###
+Wird per coap die Resource init als erstes aufgerufen, gibt gcoap_obs_init zurück das es keinen Observer gibt für die Resource 'obs'.
+Nachdem per coap-client mit der Option -s <Zeit in Sekunden> die Resource obs abgefragt wird, kann nachfolgend mit einer Abfrage von 'init'
+erkannt werden das diese Resource nun observed wird. Jedoch ist noch unklar wie alles abläuft.
+Des weiteren kann die Resource 'init' keine obsserve-Antwort senden wenn sie nicht auch mit der -s option aufgerufen wird.
+
+
 
 
 =================================================================
