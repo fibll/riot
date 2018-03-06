@@ -89,16 +89,23 @@ $ coap-client -s 20 -m get "coap://californium.eclipse.org:5683/obs"
 
 
 
-## Erster Funktionierender Versuch ##
+## Lauffähiges Observe Beispiel ##
 ### Setup ###
 - Funktion init: Führt 4 Observe Schritte aus, observed resource ist 'obs'
 - Funktion obs: Wird observed
 
 ### Ablauf ###
 Wird per coap die Resource init als erstes aufgerufen, gibt gcoap_obs_init zurück das es keinen Observer gibt für die Resource 'obs'.
-Nachdem per coap-client mit der Option -s <Zeit in Sekunden> die Resource obs abgefragt wird, kann nachfolgend mit einer Abfrage von 'init'
-erkannt werden das diese Resource nun observed wird. Jedoch ist noch unklar wie alles abläuft.
-Des weiteren kann die Resource 'init' keine obsserve-Antwort senden wenn sie nicht auch mit der -s option aufgerufen wird.
+Nachdem per coap-client mit der Option -s <Zeit in Sekunden> die Resource obs abgefragt wird, kann nachfolgend mit einer Abfrage von 'init' (ohne -s option)
+erkannt werden das diese Resource nun observed wird.
+Nun pro Abfrage der 'init' Resource eine Nachricht für den observe_client der Resource 'obs' geschickt.
+Hier wird ein char von 48 jedesmal um zwei hochgezählt (weil es noch eine doppelte Belegung der Resourcen durch gcoap und nanocoap gibt, muss gefixed werden).
+Dies funktioniert, bis die eingestellte Zeit des -s Option abgelaufen ist.
+Aufgefallen ist, dass nach dem Ablaufen, nicht nocheinmal mit der -s ein observe gestartet werden kann.
+Dies liegt wahrscheinlich daran, das mit der -s option das Observe nur gesetzt wird und die Zeit nur für den coap-client, nicht aber für den
+coap server eine Rolle spielt. Per default kann eine Resource nur einen observer haben. Nach Ablaufen der Zeit schließt 
+coap-client die Anwendung und damit ist der Kommunikationskanal ebenfalls geschlossen. Die frühere Anwendung bleibt aber der einzige Observer.
+Deshalb bringt ein erneutes starten der Anwendung nichts, die Platine muss (lange) reseted werden, danach sollte es ein weiteres (einziges) mal funktionieren.
 
 
 =================================================================
@@ -106,4 +113,5 @@ Links
 
 https://riot-os.org/api/group__net__gcoap.html#ga3918d03f99a7312946bc28d5fdb7b610
 https://tools.ietf.org/pdf/rfc7641.pdf
+https://github.com/TobiasReichert/riot_io
 
