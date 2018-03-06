@@ -18,6 +18,8 @@
 // #include "/home/bar/projekte/htw/RIOT/sys/net/application_layer/gcoap/gcoap.c"
 
 // prototypes
+void debugPrintf(char* text);
+
 static ssize_t _riot_board_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
 static ssize_t _riot_foo_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
 static ssize_t _riot_resource_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
@@ -34,9 +36,7 @@ int coap_init(void);
 /* internal value that can be read/written via CoAP */
 static uint8_t internal_value = 0;
 
-// observe resource
-//const coap_resource_t observe_resource = { "/riot/resource", COAP_GET, _riot_resource_handler };
-
+int debug = 0;
 
 
 /* must be sorted by path (alphabetically) */
@@ -91,6 +91,8 @@ static ssize_t _riot_gcoap_init_handler(coap_pkt_t *pkt, uint8_t *buf, size_t le
     int ret = 0;
     int resourceNumber = 3;
 
+
+
     // detect observe option with gcoap bib
     // step 1: check if resource is already been observed
     // ------
@@ -143,20 +145,67 @@ static ssize_t _riot_gcoap_init_handler(coap_pkt_t *pkt, uint8_t *buf, size_t le
 
 static ssize_t _riot_gcoap_obs_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 {
-    printf("\n--- Enter obs handler --- \n");
+    printf("\n--- Enter OBS handler --- \n");
 
+    // variables
     int ret = 0;
+    int resourceNumber = 4;
 
-    // initalize gcoap response
-    ret = gcoap_resp_init(pkt, buf, len, COAP_CODE_CONTENT);
-    printf("[CoAP] init: %i\n", ret);
+    // allocate buffer
+    debugPrintf("\ntest0");
+    uint8_t* tmpBuffer = malloc(1024);//sizeof(coap_pkt_t));
+    size_t tmpBufferSize = 1024;//sizeof(coap_pkt_t);
 
-    // set answer
-    char infoStr[] = "--- obs answer ---";
-    pkt->payload = (uint8_t *)infoStr;
-    size_t payload_len = strlen("--- obs answer ---");
+    // create obs notification
+    coap_pkt_t obsNotification;
 
-    return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
+
+    // ------
+    // step 1: check if resource is already been observed
+    debugPrintf("\ntest1");
+    ret = gcoap_obs_init(&obsNotification, tmpBuffer, tmpBufferSize, &coap_resources[resourceNumber]);
+
+    if(ret == GCOAP_OBS_INIT_ERR){
+        printf("STOP: ERR: gcoap observe init did not work\n");
+        return 0;
+    }
+    else if(ret == GCOAP_OBS_INIT_UNUSED){
+        printf("STOP: No observer for this resource\n");
+
+        // initalize gcoap response
+        ret = gcoap_resp_init(pkt, buf, len, COAP_CODE_CONTENT);
+        char infoStr[] = "--- no observer ---";
+        pkt->payload = (uint8_t *)infoStr;
+        size_t payload_len = strlen("--- no observer ---");
+        
+        free(tmpBuffer);
+
+        return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
+    }
+
+    // ------
+    // step 2: create own payload and set it as payload in the package pointer
+    debugPrintf("\ntest2");
+    obsNotification.payload = (uint8_t*)"OBS";
+    obsNotification.payload_len = sizeof("OBS");
+
+    // ------
+    // step 3: update the packet for the payload
+    debugPrintf("\ntest3");
+    ret = gcoap_finish(&obsNotification, obsNotification.payload_len, COAP_FORMAT_NONE); // 8 cause tmpPayloads size is 7, don't know how strlen works
+    if(ret < 0)
+        printf("ERR: gcoap_finish did not work!\n");
+
+    // ------
+    // step 4 (final): send observe message
+    debugPrintf("\ntest4");
+    ret = gcoap_obs_send(tmpBuffer, tmpBufferSize, &coap_resources[resourceNumber]); //Adress of observe resource
+    if(ret == 0)
+        printf("ERR: cannot send!\n");
+
+
+    free(tmpBuffer);
+    return 0;//gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
 }
 
 
@@ -372,4 +421,11 @@ int coap_init(void)
 {
     gcoap_register_listener(&_listener);
     return 0;
+}
+
+void debugPrintf(char* text){
+    if(debug == 1)
+        printf("%s", text);
+
+    return;
 }
