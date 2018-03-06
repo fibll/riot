@@ -23,7 +23,6 @@
 #include "nanocoap_sock.h"
 
 #include "xtimer.h"
-// #include "/home/bar/projekte/htw/RIOT/drivers/include/periph/gpio.h"
 
 
 // from monica
@@ -47,9 +46,6 @@
 
 // gpio stuff
 #include "periph/gpio.h"
-// #include "/home/bar/projekte/htw/RIOT/boards/samr21-xpro/include/board.h"
-// #include "/home/bar/projekte/htw/RIOT/boards/samr21-xpro/include/periph_conf.h"
-
 
 
 #define COAP_INBUF_SIZE (256U)
@@ -63,7 +59,8 @@ extern int _netif_config(int argc, char **argv);
 // from monica
 extern int coap_init(void);
 
-void isr(void);
+// prototypes
+void ISR_SW0(void);
 
 
 int main(void)
@@ -75,20 +72,11 @@ int main(void)
     printf("===================================\n");
     puts("\n---\nOWN NANOSERVER\n---\n");
 
-
-
-
-    // test sw0
-    int ret = 0;
-
     // init sw0
-    ret = gpio_init_int(GPIO_PIN(PA,28), GPIO_IN_PU, GPIO_FALLING, (gpio_cb_t)isr, NULL);
+    int ret = 0;
+    ret = gpio_init_int(GPIO_PIN(PA,28), GPIO_IN_PU, GPIO_FALLING, (gpio_cb_t)ISR_SW0, NULL);
     if(ret < 0)
         printf("ERR: gpio init int did not work\n");
-
-
-
-
 
 
     // from monica 
@@ -120,6 +108,12 @@ int main(void)
     return 0;
 }
 
-void isr(void){
+void ISR_SW0(void){
     printf("\nISR called\n");
+    
+    /*
+    int ret = createObsMessage(4);
+    if(ret < 0)
+        printf("createObsMessage did not work!\n");
+    */
 }
