@@ -70,6 +70,7 @@ coap-client -e somePayload -m get "coap://[ipv6-adress]:5683/foo"
 observe option -s (subscribe) <time_you_want_to_subscribe_in_sec>
 coap-client -s 1000 -m get "coap://[ipv6-adress]:5683/foo"
 
+Unklar ist wie man das observe wieder deaktiviert, da nach Ablauf der Zeit trotzdem noch die Observe Option in RIOT gesetzt bleibt
 
 =================================================================
 Observe
@@ -98,8 +99,6 @@ Wird per coap die Resource init als erstes aufgerufen, gibt gcoap_obs_init zurü
 Nachdem per coap-client mit der Option -s <Zeit in Sekunden> die Resource obs abgefragt wird, kann nachfolgend mit einer Abfrage von 'init'
 erkannt werden das diese Resource nun observed wird. Jedoch ist noch unklar wie alles abläuft.
 Des weiteren kann die Resource 'init' keine obsserve-Antwort senden wenn sie nicht auch mit der -s option aufgerufen wird.
-
-
 
 
 =================================================================

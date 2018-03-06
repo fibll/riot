@@ -19,8 +19,6 @@
 
 #include <stdio.h>
 
-//#include "/home/bar/projekte/htw/RIOT/sys/include/net/gcoap.h"
-
 #include "nanocoap.h"
 #include "nanocoap_sock.h"
 

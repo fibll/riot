@@ -22,7 +22,6 @@ void debugPrintf(char* text);
 
 static ssize_t _riot_board_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
 static ssize_t _riot_foo_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
-static ssize_t _riot_resource_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
 static ssize_t _riot_value_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
 
 // from monica
@@ -47,7 +46,6 @@ const coap_resource_t coap_resources[] = {
     { "/riot/gcoap/init",   COAP_GET, _riot_gcoap_init_handler },
     { "/riot/gcoap/obs",    COAP_GET, _riot_gcoap_obs_handler },
     { "/riot/foo",          COAP_GET, _riot_foo_handler },
-    { "/riot/resource",     COAP_GET, _riot_resource_handler },    
     { "/riot/value",        COAP_GET, _riot_value_handler },
 };
 
@@ -153,8 +151,8 @@ static ssize_t _riot_gcoap_obs_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len
 
     // allocate buffer
     debugPrintf("\ntest0");
-    uint8_t* tmpBuffer = malloc(1024);//sizeof(coap_pkt_t));
-    size_t tmpBufferSize = 1024;//sizeof(coap_pkt_t);
+    uint8_t* tmpBuffer = malloc(sizeof(coap_pkt_t));
+    size_t tmpBufferSize = sizeof(coap_pkt_t);
 
     // create obs notification
     coap_pkt_t obsNotification;
@@ -253,130 +251,11 @@ static ssize_t _riot_foo_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
         printf("payload: %s\n", pkt->payload);
     }
 
-    // handling resources and observe ===
-    // create a resource
-    //coap_resource_t* resource = NULL;
-    /*
-    coap_handler_t* resourceHandler();
-    coap_pkt_t* resourcePkt;
-    resourceHandler->pkt = resourcePkt;
-    */
-
-    /*
-    resource->path = "coap://localhost:5683/riot/ressource";
-    resource->handler = NULL;
-    resource->methods = COAP_GET;
-
-
-    // detect observe option with gcoap bib
-
-    // step 1: check if resource is already been observed
-    // ------
-    // riot-os.org:
-    // Call gcoap_obs_init() to initialize the notification for a resource. Test the return value, which may indicate there is not an observer for the resource. If so, you are done.
-    ret = gcoap_obs_init(pkt, buf, 5, resource);
-    // 5 -> random
-    if(ret == GCOAP_OBS_INIT_ERR)
-        printf("ERR: gcoap observe init did not work\n");
-    else if(ret == GCOAP_OBS_INIT_UNUSED)
-        printf("No observer for this resource\n");
-    else
-        printf("observe init response: %i\n", ret);
-
-    // step 2: create own payload and set it as payload in the package pointer
-    // ------
-    // riot-os.org: 
-    // Write the notification payload, starting at the updated payload pointer in the coap_pkt_t.
-    uint8_t* tmpPayload = (uint8_t*)"observe";
-    pkt->payload = tmpPayload;
-    printf("new payload: %s\n", pkt->payload);
-
-    // step 3: update the packet for the payload
-    // ------
-    // riot-os.org: 
-    // Call gcoap_finish(), which updates the packet for the payload.
-    ret = gcoap_finish(pkt, 4 , COAP_FORMAT_NONE);
-    // 4 -> cause tmpPayloads size is 3, don't know how strlen works
-    if(ret < 0)
-        printf("ERR: gcoap_finish did not work!\n");
-
-    // step 4 (final): send observe message
-    // ------
-    // riot-os.org: Finally, call gcoap_obs_send() for the resource.
-    // FIX: does not work so far
-    ret = gcoap_obs_send(buf, len, resource);
-    if(ret == 0)
-        printf("ERR: cannot send!\n");
-
-    */
-
-
-
-
 
     // the normal simple reply at the end
     printf("return\n");
     return coap_reply_simple(pkt, COAP_CODE_205, buf, len,
             COAP_FORMAT_TEXT, (uint8_t*)"simple reply", strlen("simple reply"));
-}
-
-// observe resource handler
-static ssize_t _riot_resource_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len){
- 
-    printf("\n--- Enter riot resource handler --- \n");
-
-    int ret = 0;
-
-
-    printf("\n=== observeable resource handler ===========================================\n");
-
-    // detect observe option ===
-    if(coap_has_observe(pkt))
-        printf("coap has observe option\n\n");
-    else
-        printf("No observe option\n\n");
-
-    printf("chosen coap_resource url: %s", coap_resources[3].path);
-
-
-    // detect observe option with gcoap bib
-    // step 1: check if resource is already been observed
-    // ------
-
-    // init with given arguments, cause these are the values of the resource
-    ret = gcoap_obs_init(pkt, buf, len, &coap_resources[3] /*Adress of observe resource*/);
-    if(ret == GCOAP_OBS_INIT_ERR)
-        printf("ERR: gcoap observe init did not work\n");
-    else if(ret == GCOAP_OBS_INIT_UNUSED){
-        printf("No observer for this resource\n");
-        return coap_reply_simple(pkt, COAP_CODE_205, buf, len,
-            COAP_FORMAT_TEXT, (uint8_t*)"uncomplete reply", strlen("uncomplete reply"));
-        }
-    else
-        printf("observe init response: %i\n", ret);
-
-    // step 2: create own payload and set it as payload in the package pointer
-    // ------
-    uint8_t* tmpPayload = (uint8_t*)"observe";
-    pkt->payload = tmpPayload;
-    printf("new payload: %s\n", pkt->payload);
-
-    // step 3: update the packet for the payload
-    // ------
-    ret = gcoap_finish(pkt, 4 /*cause tmpPayloads size is 3, don't know how strlen works*/, COAP_FORMAT_NONE);
-    if(ret < 0)
-        printf("ERR: gcoap_finish did not work!\n");
-
-    // step 4 (final): send observe message
-    // ------
-    // FIX: does not work so far
-    ret = gcoap_obs_send(buf, len, &coap_resources[3] /*Adress of observe resource*/);
-    if(ret == 0)
-        printf("ERR: cannot send!\n");
- 
- 
-    return coap_reply_simple(pkt, COAP_CODE_205, buf, len,
-        COAP_FORMAT_TEXT, (uint8_t*)"resource reply", strlen("resource reply"));
 }
 
 static ssize_t _riot_value_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
