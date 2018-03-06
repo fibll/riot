@@ -36,6 +36,7 @@ int coap_init(void);
 static uint8_t internal_value = 0;
 
 int debug = 0;
+char tmp = 48;
 
 
 /* must be sorted by path (alphabetically) */
@@ -82,68 +83,29 @@ static ssize_t _riot_gcoap_info_handler(coap_pkt_t *pkt, uint8_t *buf, size_t le
     return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
 }
 
-static ssize_t _riot_gcoap_init_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
+static ssize_t _riot_gcoap_obs_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 {
-    printf("\n--- Enter init handler --- \n");
+    printf("\n--- Enter OBS handler --- \n");
 
-    int ret = 0;
-    int resourceNumber = 3;
-
-
-
-    // detect observe option with gcoap bib
-    // step 1: check if resource is already been observed
-    // ------
-    // init with given arguments, cause these are the values of the resource
-    ret = gcoap_obs_init(pkt, buf, len, &coap_resources[resourceNumber]);
-
-    if(ret == GCOAP_OBS_INIT_ERR)
-        printf("ERR: gcoap observe init did not work\n");
-    else if(ret == GCOAP_OBS_INIT_UNUSED)
-        printf("No observer for this resource\n");
-    else {
-        printf("Resource [%s]:\n", coap_resources[resourceNumber].path);
-
-        // step 2: create own payload and set it as payload in the package pointer
-        // ------
-        uint8_t* tmpPayload = (uint8_t*)"observe";
-        buf = tmpPayload;
-        len = strlen("observe");
-        printf("new payload: %s\n", pkt->payload);
-
-        // step 3: update the packet for the payload
-        // ------
-        ret = gcoap_finish(pkt, 8, COAP_FORMAT_NONE); // 8 cause tmpPayloads size is 7, don't know how strlen works
-        if(ret < 0)
-            printf("ERR: gcoap_finish did not work!\n");
-
-        // step 4 (final): send observe message
-        // ------
-        // FIX: does not work so far
-        ret = gcoap_obs_send(buf, len, &coap_resources[resourceNumber]); //Adress of observe resource
-        if(ret == 0)
-            printf("ERR: cannot send!\n");
-        else 
-            return 0;
-    }
-    // end
-    
+    int ret = 0;    
 
     // initalize gcoap response
     ret = gcoap_resp_init(pkt, buf, len, COAP_CODE_CONTENT);
+    if(ret < 0)
+        printf("ERR: gcoap_resp_init: %i", ret);
 
     // set answer
-    char infoStr[] = "\n--- GCOAP INIT HANDLER ---";
+    char infoStr[] = "\n--- GCOAP OBS HANDLER ---";
     pkt->payload = (uint8_t *)infoStr;
-    size_t payload_len = strlen("\n--- GCOAP INIT HANDLER ---");
+    size_t payload_len = strlen("\n--- GCOAP OBS HANDLER ---");
 
     return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
 }
 
 
-static ssize_t _riot_gcoap_obs_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
+static ssize_t _riot_gcoap_init_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 {
-    printf("\n--- Enter OBS handler --- \n");
+    printf("\n--- Enter INIT handler --- \n");
 
     // variables
     int ret = 0;
@@ -184,8 +146,8 @@ static ssize_t _riot_gcoap_obs_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len
     // ------
     // step 2: create own payload and set it as payload in the package pointer
     debugPrintf("\ntest2");
-    obsNotification.payload = (uint8_t*)"OBS";
-    obsNotification.payload_len = sizeof("OBS");
+    obsNotification.payload = (uint8_t*)"OBS ";
+    obsNotification.payload_len = sizeof("OBS ");
 
     // ------
     // step 3: update the packet for the payload
@@ -203,7 +165,22 @@ static ssize_t _riot_gcoap_obs_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len
 
 
     free(tmpBuffer);
-    return 0;//gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
+    
+    // finished with the 4 steps for the obs stuff
+    // bring resource to the end
+
+
+
+    // initalize gcoap response
+    ret = gcoap_resp_init(pkt, buf, len, COAP_CODE_CONTENT);
+
+    // set answer
+    char infoStr[] = "\n--- GCOAP INIT HANDLER ---";
+    pkt->payload = (uint8_t *)infoStr;
+    size_t payload_len = strlen("\n--- GCOAP INIT HANDLER ---");
+
+    return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
+
 }
 
 
