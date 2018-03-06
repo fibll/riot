@@ -36,7 +36,7 @@ int coap_init(void);
 static uint8_t internal_value = 0;
 
 int debug = 0;
-char tmp = 48;
+char obsMessage[] = "0";
 
 
 /* must be sorted by path (alphabetically) */
@@ -146,8 +146,10 @@ static ssize_t _riot_gcoap_init_handler(coap_pkt_t *pkt, uint8_t *buf, size_t le
     // ------
     // step 2: create own payload and set it as payload in the package pointer
     debugPrintf("\ntest2");
-    obsNotification.payload = (uint8_t*)"OBS ";
-    obsNotification.payload_len = sizeof("OBS ");
+    obsMessage[0]++;
+
+    obsNotification.payload = (uint8_t*)obsMessage;
+    obsNotification.payload_len = sizeof(obsMessage);
 
     // ------
     // step 3: update the packet for the payload
