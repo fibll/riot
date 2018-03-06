@@ -23,6 +23,7 @@
 #include "nanocoap_sock.h"
 
 #include "xtimer.h"
+// #include "/home/bar/projekte/htw/RIOT/drivers/include/periph/gpio.h"
 
 
 // from monica
@@ -43,6 +44,14 @@
 #include "shell.h"
 #include "xtimer.h"
 
+
+// gpio stuff
+#include "periph/gpio.h"
+// #include "/home/bar/projekte/htw/RIOT/boards/samr21-xpro/include/board.h"
+// #include "/home/bar/projekte/htw/RIOT/boards/samr21-xpro/include/periph_conf.h"
+
+
+
 #define COAP_INBUF_SIZE (256U)
 
 #define MAIN_QUEUE_SIZE     (8)
@@ -53,6 +62,8 @@ extern int _netif_config(int argc, char **argv);
 
 // from monica
 extern int coap_init(void);
+
+void isr(void);
 
 
 int main(void)
@@ -65,8 +76,23 @@ int main(void)
     puts("\n---\nOWN NANOSERVER\n---\n");
 
 
+
+
+    // test sw0
+    int ret = 0;
+
+    // init sw0
+    ret = gpio_init_int(GPIO_PIN(PA,28), GPIO_IN_PU, GPIO_FALLING, (gpio_cb_t)isr, NULL);
+    if(ret < 0)
+        printf("ERR: gpio init int did not work\n");
+
+
+
+
+
+
     // from monica 
-    // start coap thread
+    // start coap thread (causing the double handling of resources, together with the nanocoap handling)
     LOG_INFO(".. init coap\n");
     if(coap_init() < 0) {
         return 1;
@@ -92,4 +118,8 @@ int main(void)
 
     /* should be never reached */
     return 0;
+}
+
+void isr(void){
+    printf("\nISR called\n");
 }

@@ -36,7 +36,7 @@ int coap_init(void);
 static uint8_t internal_value = 0;
 
 int debug = 0;
-char obsMessage[] = "0";
+char obsMessage[] = "0\n";
 
 
 /* must be sorted by path (alphabetically) */
@@ -177,9 +177,9 @@ static ssize_t _riot_gcoap_init_handler(coap_pkt_t *pkt, uint8_t *buf, size_t le
     ret = gcoap_resp_init(pkt, buf, len, COAP_CODE_CONTENT);
 
     // set answer
-    char infoStr[] = "\n--- GCOAP INIT HANDLER ---";
+    char infoStr[] = "--- GCOAP INIT HANDLER ---\n";
     pkt->payload = (uint8_t *)infoStr;
-    size_t payload_len = strlen("\n--- GCOAP INIT HANDLER ---");
+    size_t payload_len = strlen("--- GCOAP INIT HANDLER ---\n");
 
     return gcoap_finish(pkt, payload_len, COAP_FORMAT_JSON);
 
