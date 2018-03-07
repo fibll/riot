@@ -59,6 +59,7 @@ extern int _netif_config(int argc, char **argv);
 // from monica
 extern int coap_init(void);
 extern int createObsMessage(int resourceNumber);
+extern void debugPrintf(char* text);
 // extern int check(int num);
 
 // prototypes
@@ -75,10 +76,6 @@ int main(void)
     
     printf("===================================\n");
     puts("\n---\nOWN NANOSERVER\n---\n");
-
-    // printf("MAIN: ");
-    // ret = check(100);
-    // printf("return of check: %i\n", ret);
 
     // init sw0
     ret = gpio_init_int(GPIO_PIN(PA,28), GPIO_IN_PU, GPIO_FALLING, (gpio_cb_t)ISR_SW0, NULL);
@@ -125,5 +122,6 @@ void ISR_SW0(void){
     if(ret < 0)
         printf("createObsMessage did not work!\n");
 
-    debugPrintf("\n --- test msg --- \n");
+    // NO '\n' IN THE DEBUG MESSAGE, IT DOES NOT WORK!
+    debugPrintf("--- test msg ---");
 }

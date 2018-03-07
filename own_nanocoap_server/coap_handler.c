@@ -19,7 +19,6 @@
 
 // prototypes
 void debugPrintf(char* text);
-// int createObsMessage(int resourceNumber);
 
 static ssize_t _riot_board_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
 static ssize_t _riot_foo_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
@@ -30,9 +29,10 @@ static ssize_t _riot_gcoap_info_handler(coap_pkt_t* pkt, uint8_t *buf, size_t le
 static ssize_t _riot_gcoap_init_handler(coap_pkt_t* pkt, uint8_t *buf, size_t len);
 static ssize_t _riot_gcoap_obs_handler(coap_pkt_t* pkt, uint8_t *buf, size_t len);
 int coap_init(void);
+
+// own
 int createObsMessage(int resourceNumber);
-// int check(int num);
-// end
+// void debugPrintf(char* text);
 
 
 /* internal value that can be read/written via CoAP */
@@ -228,19 +228,10 @@ int coap_init(void)
     return 0;
 }
 
-int check(int num)
-{
-    printf("CHECK!\n");
-    printf("debugVar is %i\n", debug);
-    printf("numVar is %i\n", num);
-    return 0;
-}
-
 void debugPrintf(char* text){
-    printf("debugPrintf called...\n");
-
-    if(debug == 1)
-        printf("%s", text);
+    if(debug == 1){
+        printf("\nDEBUG: %s\n", text);
+    }
 
     return;
 }
