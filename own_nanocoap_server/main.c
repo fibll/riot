@@ -21,7 +21,6 @@
 
 #include "nanocoap.h"
 #include "nanocoap_sock.h"
-
 #include "xtimer.h"
 
 
@@ -58,13 +57,11 @@ extern int _netif_config(int argc, char **argv);
 
 // from monica
 extern int coap_init(void);
-extern int createObsMessage(int resourceNumber);
-extern void debugPrintf(char* text);
-// extern int check(int num);
 
 // prototypes
 void ISR_SW0(void);
-// extern int createObsMessage(int resourceNumber);
+extern int createObsMessage(int resourceNumber);
+extern void debugPrintf(char* text);
 
 
 int main(void)
@@ -89,10 +86,8 @@ int main(void)
     if(coap_init() < 0) {
         return 1;
     }
-    // end
 
     // usual stuff
-
     /* nanocoap_server uses gnrc sock which uses gnrc which needs a msg queue */
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
 
@@ -123,5 +118,5 @@ void ISR_SW0(void){
         printf("createObsMessage did not work!\n");
 
     // NO '\n' IN THE DEBUG MESSAGE, IT DOES NOT WORK!
-    debugPrintf("--- test msg ---");
+    debugPrintf("ISR finished successfully");
 }
