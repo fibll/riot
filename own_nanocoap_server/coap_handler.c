@@ -18,9 +18,8 @@
 // #include "/home/bar/projekte/htw/RIOT/sys/net/application_layer/gcoap/gcoap.c"
 
 // prototypes
-static void debugPrintf(char* text);
-int createObsMessage(int resourceNumber);
-
+void debugPrintf(char* text);
+// int createObsMessage(int resourceNumber);
 
 static ssize_t _riot_board_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
 static ssize_t _riot_foo_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len);
@@ -31,6 +30,8 @@ static ssize_t _riot_gcoap_info_handler(coap_pkt_t* pkt, uint8_t *buf, size_t le
 static ssize_t _riot_gcoap_init_handler(coap_pkt_t* pkt, uint8_t *buf, size_t len);
 static ssize_t _riot_gcoap_obs_handler(coap_pkt_t* pkt, uint8_t *buf, size_t len);
 int coap_init(void);
+int createObsMessage(int resourceNumber);
+// int check(int num);
 // end
 
 
@@ -39,8 +40,9 @@ static uint8_t internal_value = 0;
 
 
 // observing does somehow not work if debug is 1, don't know what the problem is
-int debug = 0;
+int debug = 1;
 char obsMessage[] = "0\n";
+coap_pkt_t obsNotification;
 
 
 /* must be sorted by path (alphabetically) */
@@ -226,7 +228,15 @@ int coap_init(void)
     return 0;
 }
 
-static void debugPrintf(char* text){
+int check(int num)
+{
+    printf("CHECK!\n");
+    printf("debugVar is %i\n", debug);
+    printf("numVar is %i\n", num);
+    return 0;
+}
+
+void debugPrintf(char* text){
     printf("debugPrintf called...\n");
 
     if(debug == 1)
@@ -241,30 +251,33 @@ int createObsMessage(int resourceNumber){
     int ret = 0;
 
     // allocate buffer
-    debugPrintf("\ntest0");
+    printf("test 0 ");
+    
     uint8_t* tmpBuffer = malloc(sizeof(coap_pkt_t));
     size_t tmpBufferSize = sizeof(coap_pkt_t);
 
     // create obs notification
-    coap_pkt_t obsNotification;
+    // coap_pkt_t obsNotification;
     
+    // printf("%u, %i, %i, %i", *tmpBuffer, tmpBufferSize, obsNotification.payload_len, ret);
+
     // ------
     // step 1: check if resource is already been observed
-    debugPrintf("\ntest1");
+    printf(" 1");
     ret = gcoap_obs_init(&obsNotification, tmpBuffer, tmpBufferSize, &coap_resources[resourceNumber]);
 
     if(ret == GCOAP_OBS_INIT_ERR){
-        printf("STOP: ERR: gcoap observe init did not work\n");
+        printf("\nSTOP: ERR: gcoap observe init did not work\n");
         return -1;
     }
     else if(ret == GCOAP_OBS_INIT_UNUSED){
-        printf("STOP: No observer for this resource\n");
+        printf("\nSTOP: No observer for this resource\n");
         return -1;
     }
 
     // ------
     // step 2: create own payload and set it as payload in the package pointer
-    debugPrintf("\ntest2");
+    printf(" 2");
     obsMessage[0]++;
 
     obsNotification.payload = (uint8_t*)obsMessage;
@@ -272,19 +285,19 @@ int createObsMessage(int resourceNumber){
 
     // ------
     // step 3: update the packet for the payload
-    debugPrintf("\ntest3");
+    printf(" 3");
     ret = gcoap_finish(&obsNotification, obsNotification.payload_len, COAP_FORMAT_NONE); // 8 cause tmpPayloads size is 7, don't know how strlen works
     if(ret < 0){
-        printf("ERR: gcoap_finish did not work!\n");
+        printf("\nRR: gcoap_finish did not work!\n");
         return -1;
     }
 
     // ------
     // step 4 (final): send observe message
-    debugPrintf("\ntest4");
+    printf(" 4\n");
     ret = gcoap_obs_send(tmpBuffer, tmpBufferSize, &coap_resources[resourceNumber]); //Adress of observe resource
     if(ret == 0){
-        printf("ERR: cannot send!\n");
+        printf("\nERR: cannot send!\n");
         return -1;
     }
 

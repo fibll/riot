@@ -2,6 +2,7 @@
     "files.associations": {
         "array": "c",
         "initializer_list": "c",
-        "gpio.h": "c"
+        "gpio.h": "c",
+        "ratio": "c"
     }
 }
