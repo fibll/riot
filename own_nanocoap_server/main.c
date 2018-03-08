@@ -82,6 +82,8 @@ int main(void)
 
     // from monica 
     // start coap thread (causing the double handling of resources, together with the nanocoap handling)
+    // solution: go to #!own_nanocoap_server/bin/pkg/samr21-xpro/nanocoap/nanocoap/nanocoap.c and change the return from line 149 to return 0
+    // can't be commited, cause of beginners problems with gitignore
     LOG_INFO(".. init coap\n");
     if(coap_init() < 0) {
         return 1;

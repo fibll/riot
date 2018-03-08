@@ -121,4 +121,5 @@ Links
 https://riot-os.org/api/group__net__gcoap.html#ga3918d03f99a7312946bc28d5fdb7b610
 https://tools.ietf.org/pdf/rfc7641.pdf
 https://github.com/TobiasReichert/riot_io
+https://libcoap.net/doc/reference/4.1.1/index.html
 

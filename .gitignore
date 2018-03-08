@@ -1,4 +1,5 @@
 */bin
+
 libcoap-4.1.1/*.*
 libcoap-4.1.1/doc
 libcoap-4.1.1/tests
@@ -13,3 +14,4 @@ libcoap-4.1.1/Makefile
 !libcoap-4.1.1/net.c
 !libcoap-4.1.1/net.h
 !libcoap-4.1.1/examples/client.c
+#!own_nanocoap_server/bin/pkg/samr21-xpro/nanocoap/nanocoap/nanocoap.c

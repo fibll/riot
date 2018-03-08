@@ -1542,7 +1542,7 @@ coap_dispatch( coap_context_t *context ) {
       else if (COAP_MESSAGE_IS_RESPONSE(rcvd->pdu->hdr)){
 	handle_response(context, sent, rcvd);
 
-  /* PLACEHOLDER: call own method to check the received content */                           //----------------------------------------------------------
+      /* PLACEHOLDER: call own method to check the received content */                           //----------------------------------------------------------
       // printf("\n\npayload is: %s...\n\n", rcvd->pdu->data);
       check_for_password(rcvd->pdu->data[0]);
     }
@@ -1567,7 +1567,6 @@ coap_can_exit( coap_context_t *context ) {
 // OWN STUFF
 int
 check_for_password(char payload) {
-  // if(strcmp(payload, "A") == 0){
   if(payload == '9') {
     printf("\ncorrect password!\n");
   }
