@@ -1,1 +1,15 @@
 */bin
+libcoap-4.1.1/*.*
+libcoap-4.1.1/doc
+libcoap-4.1.1/tests
+libcoap-4.1.1/examples
+libcoap-4.1.1/configure
+libcoap-4.1.1/README
+libcoap-4.1.1/ChangeLog
+libcoap-4.1.1/Makefile
+
+
+# whitelist
+!libcoap-4.1.1/net.c
+!libcoap-4.1.1/net.h
+!libcoap-4.1.1/examples/client.c
