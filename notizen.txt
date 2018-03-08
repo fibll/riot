@@ -1,5 +1,5 @@
 =================================================================
-Mögliche Realisierungen
+## Mögliche Realisierungen
 + Kein Server
 -> 1 coap-server, 1 coap-clients
 -> Keyboard hängt an Server, Client überprüft Passwort in DB und öffnet Schloss
@@ -10,7 +10,7 @@ Mögliche Realisierungen
 
 
 =================================================================
-Projekt aufspielen
+## Projekt aufspielen
 
 + export BOARD=samr21-xpro && make term // für atmel platinen terminal
 + make // um projekt binaries zu erstellen
@@ -19,7 +19,7 @@ Projekt aufspielen
 
 
 =================================================================
-ipv6 Adressen
+## IPv6 Adressen
 
 ATML2127031800009659:
 + 2001:db8::585b:3c24:7705:9eba (...C26B) ORANGE
@@ -39,7 +39,7 @@ Orange:
 
 
 =================================================================
-Funktioniert
+## Funktioniert
 
 + gnbc_border_router auf ...C26B (ORANGE)
 + gnbc_networking auf ...C3DB (YELLOW)
@@ -53,7 +53,7 @@ Funktioniert
 
 
 =================================================================
-Makefile
+## Makefile
 
 The line
    BOARD ?= native
@@ -61,7 +61,7 @@ should be replaced with:
    BOARD ?= samr21-xpro
 
 =================================================================
-coap-client
+## coap-client
 
 Options:
 payload option -e
@@ -73,7 +73,7 @@ coap-client -s 1000 -m get "coap://[ipv6-adress]:5683/foo"
 Unklar ist wie man das observe wieder deaktiviert, da nach Ablauf der Zeit trotzdem noch die Observe Option in RIOT gesetzt bleibt
 
 =================================================================
-Observe
+## Observe
 Für die realisierung müssen 4 Schritte ausgeführt werden. Nachzulesen auf:
 https://riot-os.org/api/group__net__gcoap.html#ga3918d03f99a7312946bc28d5fdb7b610
 
