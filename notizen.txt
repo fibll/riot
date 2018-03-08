@@ -63,14 +63,21 @@ should be replaced with:
 =================================================================
 ## coap-client
 
-Options:
-payload option -e
+### Options
+- payload option -e
 coap-client -e somePayload -m get "coap://[ipv6-adress]:5683/foo"
 
-observe option -s (subscribe) <time_you_want_to_subscribe_in_sec>
+- observe option -s (subscribe) <time_you_want_to_subscribe_in_sec>
 coap-client -s 1000 -m get "coap://[ipv6-adress]:5683/foo"
 
-Unklar ist wie man das observe wieder deaktiviert, da nach Ablauf der Zeit trotzdem noch die Observe Option in RIOT gesetzt bleibt
+- Unklar ist wie man das observe wieder deaktiviert, da nach Ablauf der Zeit trotzdem noch die Observe Option in RIOT gesetzt bleibt
+
+### Changes
+In order to later check a received passwort, the payload of the observe-answer has to be checked. To do this the coap-client has to be modified.
+The coap-client implementation deals with the received message in the function coap_dispatch() (defined in net.c). In the definition of the function
+an own function could be placed around near the end when the message is passed to higher layers, cause at that point a lot of errors that could happen are already checked.
+In the structures of the received coap_queue_t rcvd the payload can be found in rcvd->pdu->data.
+
 
 =================================================================
 ## Observe

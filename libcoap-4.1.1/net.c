@@ -1542,8 +1542,9 @@ coap_dispatch( coap_context_t *context ) {
       else if (COAP_MESSAGE_IS_RESPONSE(rcvd->pdu->hdr)){
 	handle_response(context, sent, rcvd);
 
-  /* call own method to check the received content */                           //----------------------------------------------------------
-      printf("\n\npayload is: %s...\n\n", rcvd->pdu->data);
+  /* PLACEHOLDER: call own method to check the received content */                           //----------------------------------------------------------
+      // printf("\n\npayload is: %s...\n\n", rcvd->pdu->data);
+      check_for_password(rcvd->pdu->data[0]);
     }
       else {
 	debug("dropped message with invalid code\n");
@@ -1562,6 +1563,19 @@ int
 coap_can_exit( coap_context_t *context ) {
   return !context || (context->recvqueue == NULL && context->sendqueue == NULL);
 }
+
+// OWN STUFF
+int
+check_for_password(char payload) {
+  // if(strcmp(payload, "A") == 0){
+  if(payload == '9') {
+    printf("\ncorrect password!\n");
+  }
+
+  return 0;
+}
+// OWN STUFF
+
 
 #ifdef WITH_CONTIKI
 
