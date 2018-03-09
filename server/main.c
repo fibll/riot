@@ -545,6 +545,8 @@ int _open_connection(char *name, char *option)
 
 int main(int argc, char *argv[])
 {
+  int runOnce = 0;
+
   char inbuf[MTU];
   char *serial_option = NULL;
 
@@ -665,6 +667,12 @@ int main(int argc, char *argv[])
     if (FD_ISSET(STDIN_FILENO, &readfds))
     {
       ssize_t res = read(STDIN_FILENO, inbuf, sizeof(inbuf));
+      //
+      sprintf(inbuf,"ifconfig");
+      if (0 == runOnce) {
+        res = sizeof("ifconfig"-1);
+      }
+      //
       if (res <= 0)
       {
         fprintf(stderr, "error reading from stdio. res=%zi\n", res);
