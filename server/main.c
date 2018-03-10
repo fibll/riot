@@ -664,15 +664,24 @@ int main(int argc, char *argv[])
       checked_write(serial_fd, &delim, 1);
     }
 
+    //
+    
+    if (0 == runOnce) {
+      fprintf(stderr,"ICH BIN DAS KOMMANDO!");
+      sprintf(inbuf,"ifconfig");
+      char delim = LINE_FRAME_DELIMITER;
+        char head[] = {LINE_FRAME_DELIMITER, LINE_ESC_CHAR, (LINE_FRAME_TYPE_TEXT ^ 0x20)};
+        checked_write(serial_fd, head, sizeof(head));
+        _write_escaped(serial_fd, inbuf, res);
+        checked_write(serial_fd, &delim, 1);
+        fprintf(stderr,"Und? Hab ich getroffen?");
+    }
+    //
+
     if (FD_ISSET(STDIN_FILENO, &readfds))
     {
       ssize_t res = read(STDIN_FILENO, inbuf, sizeof(inbuf));
-      //
-      sprintf(inbuf,"ifconfig");
-      if (0 == runOnce) {
-        res = sizeof("ifconfig"-1);
-      }
-      //
+      
       if (res <= 0)
       {
         fprintf(stderr, "error reading from stdio. res=%zi\n", res);
