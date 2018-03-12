@@ -25,6 +25,7 @@
 #include <netdb.h>
 
 #include <termios.h>
+#include "./includes/serverHandler.h"
 
 #define MTU 9000
 
@@ -664,19 +665,10 @@ int main(int argc, char *argv[])
       checked_write(serial_fd, &delim, 1);
     }
 
-    //
-    
-    if (0 == runOnce) {
-      fprintf(stderr,"ICH BIN DAS KOMMANDO!");
-      sprintf(inbuf,"ifconfig");
-      char delim = LINE_FRAME_DELIMITER;
-        char head[] = {LINE_FRAME_DELIMITER, LINE_ESC_CHAR, (LINE_FRAME_TYPE_TEXT ^ 0x20)};
-        checked_write(serial_fd, head, sizeof(head));
-        _write_escaped(serial_fd, inbuf, res);
-        checked_write(serial_fd, &delim, 1);
-        fprintf(stderr,"Und? Hab ich getroffen?");
-    }
-    //
+    // Project locker Add-On
+    return serverHandler();
+
+    // -> this part should be never reached
 
     if (FD_ISSET(STDIN_FILENO, &readfds))
     {
