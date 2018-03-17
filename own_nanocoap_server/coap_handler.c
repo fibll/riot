@@ -142,6 +142,7 @@ static ssize_t _riot_gcoap_init_handler(coap_pkt_t *pkt, uint8_t *buf, size_t le
 // ==================================================================================
 
 
+// to get them to work again, they have to be changed to gcoap!
 
 static ssize_t _riot_board_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len)
 {
