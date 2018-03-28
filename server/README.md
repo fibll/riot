@@ -1,65 +1,61 @@
 # Server Add-On for RIoT-OS
 
+Last update: 03/28/2018
 ## 1. General Information
 
-This addon is for [RIoT-OS][1] _**TODO MODULE NAME**_
-
-### 1.1 Directories and Files
-
-* README.md
-* includes/
-  * interface.h
-* src/
-  * keyboard_main.c
+This addon extent ethos application for [RIoT-OS][1]
 
 ### 1.2 Installation
 
-1. Copy the folder `keyboard` in _**TODO MODULE PATH**_
-1. add `#include "interface.h"` into _**TODO MODULE FILE**_
-1. add function _**TODO**_
+1. Copy the folder `server` into the _RIOT/dist/tools_ directory.
+1. Enter the directory and run _make all_.
+
+### 1.3 Usage
+
+This extended ethos script will be called automatically by locker-libcoap addon.
+After initialization of the connection to the RIoT module, the permanently implemented GPIO pin is activated or deactivated. Finally ethos will shut down its connection.
+
+To change any pin or update the pin library you have to update the `serverHandler()` function in the serverHandler.c file. Please note that all defined GPIO pins are currently activated or deactivated by calling the script.
 
 ## 2. File Descriptions
 
-### 2.1 interface.h
+### 2.1 Directories and Files
+
+* ethos.c
+* LICENSE
+* main.c
+* Makefile
+* README.md
+* serverHandler.c
+* start_network.sh
+* includes/
+  * serverHandler.h
+
+### 2.1 Server Handler Header and Source File
+
+```c
+int serverHandler();
+```
+
+The server handler function prepares the string for the GPIO command which is send via ethos to the module.
+
+### 2.3 Main File
+
+* Line 669 was updated  with `return serverHandler();`
+* everything below will be ignored after returning
 
 ## 3. Creation Process
 
-### idea
+### 3.1 Introduction
+
+Originally, the server should receive an encrypted string from the module using the keyboard.
+Since we only have two modules and cannot access the router directly with Coap, we have to send a command to the router via ethos script to open the lock.
+
+In the following section you will find a scratch of the original server function.
+
+### 3.2 Scratch of Original Server Funktion
 
 ```c
-/*
- * Copyright (C) 2017 HTW Dresden
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
- */
-
-/**
- * @ingroup     examples
- * @{
- *
- * @file        
- * @brief       Server interface
- *
- * @author      Simon Retsch   <sxxxxx@informatik.htw-dresden.de>
- * @author      Tobias Ehrlich <s72851@informatik.htw-dresden.de>
- *
- * @}
- */
-// --- sys includes ---------------------------------------
-#include <inttypes.h>
-#include <string.h>
-
-// --- user includes --------------------------------------
-#include "../includes/errorPS.h"
-#include "../includes/pwDB.h"
-#include "../includes/filehandler.h"
-
-// --- defines --------------------------------------------
-#define DATABASENAME "locker"
-
-// --- functios -------------------------------------------
 /**
  * Server main function handles incoming strings, checks if they match to a
  * password and send an open instruction to a locker.
@@ -88,7 +84,7 @@ void server_main(char *string, void (*fp)(char *out))
     return;
   }
 
-  // 2. check wether a database is available
+  // 2. check whether a database is available
   ret = checkForDatabase(DATABASENAME);
   if (OK != ret)
   {
@@ -125,12 +121,11 @@ void server_main(char *string, void (*fp)(char *out))
   // 6. clean buffer
   memset(buf, 0x0, MAX_PASSWORD_LEN);
 }
-/* EOF */
 ```
 
-* copy Makefile from ethos
-* add INCLUDES and BIN to Makefile
-* catch received data and handle it in our function
+### TODO
+
+* add a possibility to activate several pins independent 
 
 ## Links
 

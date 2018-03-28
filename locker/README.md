@@ -132,7 +132,7 @@ To implement new commands, we use the description of the RIOT Tutorial[Creating 
 ### 3.2 Possible implementations
 
 * init pins and ports
-* set pin high or low, depending on curent status
+* set pin high or low, depending on current status
 * set pin only high
 * set pin only low
 * function combinations are not available

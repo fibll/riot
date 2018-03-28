@@ -12,7 +12,7 @@
 
 // -> { full sh script path, USB addr., tunnel ID, IPV6 addr., NULL }
 char *arguments[][5] = { 
-	{"/home/tobi/RIOT/examples/server/start_network.sh", "/dev/ttyACM0", "tap0", "fd17:cafe:cafe:3::3/64", NULL},
+	{"/home/{user}/RIOT/examples/server/start_network.sh", "/dev/ttyACM0", "tap0", "fd17:cafe:cafe:3::3/64", NULL},
 	{NULL,NULL,NULL,NULL,NULL}
 };
 

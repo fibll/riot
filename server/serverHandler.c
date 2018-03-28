@@ -44,9 +44,10 @@
 
  #define SUCCESS 0
  #define FAILURE -1
- #define DEBUG 1
+ #define DEBUG 0
 
 int serverHandler() {
+    char inbuf[9000];
     sprintf(inbuf,"sgipo -s PB 2\n");
     ssize_t res = sizeof(inbuf);
 
@@ -54,7 +55,11 @@ int serverHandler() {
     fprintf(stderr,"I AM THE COMMANDO!\n");
     fprintf(stderr,"K = %s",inbuf);
 #endif
-      
+    /*
+     * - write the header and lock the access to the module (write only)
+     * - writes the message
+     * - open the accesspoint again (read only)
+     */  
     char delim = LINE_FRAME_DELIMITER;
     char head[] = {LINE_FRAME_DELIMITER, LINE_ESC_CHAR, (LINE_FRAME_TYPE_TEXT ^ 0x20)};
     checked_write(serial_fd, head, sizeof(head));
@@ -62,7 +67,7 @@ int serverHandler() {
     checked_write(serial_fd, &delim, 1);
 
 #if (DEBUG)
-    fprintf(stderr,"\nUnd? Hab ich getroffen?\n");
+    fprintf(stderr,"\nAnd? Was it a hit?\n");
 #endif
 
     return SUCCESS;
